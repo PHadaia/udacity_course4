@@ -14,9 +14,10 @@ import org.springframework.http.ResponseEntity;
 import java.math.BigDecimal;
 import java.util.Optional;
 
+import static com.example.demo.TestConstants.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static org.junit.jupiter.api.Assertions.*;
 
 
 public class CartControllerTest {
@@ -24,8 +25,6 @@ public class CartControllerTest {
     private static final UserRepository userRepositoryMock = mock(UserRepository.class);
     private static final CartRepository cartRepositoryMock = mock(CartRepository.class);
     private static final ItemRepository itemRepositoryMock = mock(ItemRepository.class);
-    private static final long ID = 0L;
-    private static final String USER_NAME = "testUsername";
     private static User user;
 
 
@@ -39,26 +38,26 @@ public class CartControllerTest {
 
         Cart cart = new Cart();
         user = new User();
-        user.setId(ID);
-        user.setUsername(USER_NAME);
-        user.setPassword("testPassword");
+        user.setId(USER_ID);
+        user.setUsername(USERNAME);
+        user.setPassword(USER_PASSWORD);
         user.setSalt("testSalt");
         user.setCart(cart);
 
         Item item = new Item();
-        item.setId(ID);
+        item.setId(ITEM_ID);
         item.setName("testItemName");
         item.setDescription("testItemDescription");
         item.setPrice(BigDecimal.ONE);
 
-        when(userRepositoryMock.findByUsername(USER_NAME)).thenReturn(user);
-        when(itemRepositoryMock.findById(ID)).thenReturn(Optional.of(item));
+        when(userRepositoryMock.findByUsername(USERNAME)).thenReturn(user);
+        when(itemRepositoryMock.findById(ITEM_ID)).thenReturn(Optional.of(item));
     }
 
     @Test
     public void testAddToCart() {
         // Arrange
-        ModifyCartRequest modifyCartRequest = createModifyCartRequest(USER_NAME, ID, 1);
+        ModifyCartRequest modifyCartRequest = createModifyCartRequest(USERNAME, ITEM_ID, 1);
 
         // Act
         ResponseEntity<Cart> responseEntity = cartController.addTocart(modifyCartRequest);
@@ -76,7 +75,7 @@ public class CartControllerTest {
     @Test
     public void testAddToCartInvalidUser() {
         // Arrange
-        ModifyCartRequest modifyCartRequest = createModifyCartRequest("invalidUserName", ID, 1);
+        ModifyCartRequest modifyCartRequest = createModifyCartRequest("invalidUserName", ITEM_ID, 1);
 
         // Act
         ResponseEntity<Cart> responseEntity = cartController.addTocart(modifyCartRequest);
@@ -89,7 +88,7 @@ public class CartControllerTest {
     @Test
     public void testAddToCartInvalidItem() {
         // Arrange
-        ModifyCartRequest modifyCartRequest = createModifyCartRequest(USER_NAME, 2L, 1);
+        ModifyCartRequest modifyCartRequest = createModifyCartRequest(USERNAME, 2L, 1);
 
         // Act
         ResponseEntity<Cart> responseEntity = cartController.addTocart(modifyCartRequest);
@@ -102,7 +101,7 @@ public class CartControllerTest {
     @Test
     public void testRemoveFromCart() {
         // Arrange
-        ModifyCartRequest modifyCartRequest = createModifyCartRequest(USER_NAME, ID, 1);
+        ModifyCartRequest modifyCartRequest = createModifyCartRequest(USERNAME, ITEM_ID, 1);
 
         // Act
         ResponseEntity<Cart> responseEntity = cartController.removeFromcart(modifyCartRequest);
@@ -119,7 +118,7 @@ public class CartControllerTest {
     @Test
     public void testRemoveFromCartInvalidUser() {
         // Arrange
-        ModifyCartRequest modifyCartRequest = createModifyCartRequest("invalidUserName", ID, 1);
+        ModifyCartRequest modifyCartRequest = createModifyCartRequest("invalidUserName", ITEM_ID, 1);
 
         // Act
         ResponseEntity<Cart> responseEntity = cartController.removeFromcart(modifyCartRequest);
@@ -132,7 +131,7 @@ public class CartControllerTest {
     @Test
     public void testRemoveFromCartInvalidItem() {
         // Arrange
-        ModifyCartRequest modifyCartRequest = createModifyCartRequest(USER_NAME, 2L, 1);
+        ModifyCartRequest modifyCartRequest = createModifyCartRequest(USERNAME, 2L, 1);
 
         // Act
         ResponseEntity<Cart> responseEntity = cartController.removeFromcart(modifyCartRequest);

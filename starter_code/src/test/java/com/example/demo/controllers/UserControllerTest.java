@@ -7,12 +7,12 @@ import com.example.demo.model.persistence.repositories.UserRepository;
 import com.example.demo.model.requests.CreateUserRequest;
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.jupiter.api.BeforeAll;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Optional;
 
+import static com.example.demo.TestConstants.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -24,8 +24,6 @@ public class UserControllerTest {
     private static final CartRepository cartRepositoryMock = mock(CartRepository.class);
     private static final BCryptPasswordEncoder bCryptPasswordEncoderMock = mock(BCryptPasswordEncoder.class);
     private static User user;
-    private static final long USER_ID = 0L;
-    private static final String USER_NAME = "testUsername";
 
     @Before
     public void init() {
@@ -38,8 +36,8 @@ public class UserControllerTest {
         Cart cart = new Cart();
         user = new User();
         user.setId(USER_ID);
-        user.setUsername(USER_NAME);
-        user.setPassword("testPassword");
+        user.setUsername(USERNAME);
+        user.setPassword(USER_PASSWORD);
         user.setSalt("testSalt");
         user.setCart(cart);
 
@@ -90,10 +88,10 @@ public class UserControllerTest {
     @Test
     public void testFindByUsername() {
         // Arrange
-        when(userRepositoryMock.findByUsername(USER_NAME)).thenReturn(user);
+        when(userRepositoryMock.findByUsername(USERNAME)).thenReturn(user);
 
         // Act
-        ResponseEntity<User> responseEntity = userController.findByUserName(USER_NAME);
+        ResponseEntity<User> responseEntity = userController.findByUserName(USERNAME);
 
         // Assert
         assertNotNull(responseEntity);

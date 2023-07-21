@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static com.example.demo.TestConstants.ITEM_NAME;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -17,7 +18,6 @@ public class ItemControllerTest {
     private static ItemController itemController;
     private static final ItemRepository itemRepositoryMock = mock(ItemRepository.class);
     private static final long ID = 0L;
-    private static final String ITEM_NAME = "testItemName";
     private static Item item;
 
 
