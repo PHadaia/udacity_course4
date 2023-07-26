@@ -7,6 +7,7 @@ import com.example.demo.model.persistence.repositories.UserRepository;
 import com.example.demo.model.requests.CreateUserRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
@@ -41,23 +42,28 @@ public class UserController {
 	
 	@PostMapping("/create")
 	public ResponseEntity<User> createUser(@RequestBody CreateUserRequest createUserRequest) {
-		User user = new User();
-		user.setUsername(createUserRequest.getUsername());
+		try {
+			User user = new User();
+			user.setUsername(createUserRequest.getUsername());
 
-		if (!createUserRequest.getPassword().equals(createUserRequest.getConfirmPassword()) || createUserRequest.getPassword().length() < 8) {
-			LOGGER.error("User could not be created due to mismatched password {}", createUserRequest);
-			return ResponseEntity.badRequest().build();
+			if (!createUserRequest.getPassword().equals(createUserRequest.getConfirmPassword()) || createUserRequest.getPassword().length() < 8) {
+				LOGGER.error("User could not be created due to mismatched password {}", createUserRequest);
+				return ResponseEntity.badRequest().build();
+			}
+
+			user.setPassword(bCryptPasswordEncoder.encode(createUserRequest.getPassword()));
+
+			Cart cart = new Cart();
+			cartRepository.save(cart);
+			user.setCart(cart);
+			userRepository.save(user);
+
+			LOGGER.info("User {} was successfully created", user.getUsername());
+			return ResponseEntity.ok(user);
+		} catch (Exception e) {
+			LOGGER.error("There was an unexpected error while creating user {}", createUserRequest.getUsername(), e);
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
-
-		user.setPassword(bCryptPasswordEncoder.encode(createUserRequest.getPassword()));
-
-		Cart cart = new Cart();
-		cartRepository.save(cart);
-		user.setCart(cart);
-		userRepository.save(user);
-
-		LOGGER.info("User {} was successfully created", user.getUsername());
-		return ResponseEntity.ok(user);
 	}
 	
 }
