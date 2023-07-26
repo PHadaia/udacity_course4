@@ -33,15 +33,15 @@ public class OrderController {
 		try {
 			User user = userRepository.findByUsername(username);
 			if(user == null) {
-				LOGGER.warn("No user with username {} could be found", username);
+				LOGGER.warn("Order Controller: No user with username {} could be found", username);
 				return ResponseEntity.notFound().build();
 			}
 			UserOrder order = UserOrder.createFromCart(user.getCart());
 			orderRepository.save(order);
-			LOGGER.info("Order for user {} was successfully submitted", username);
+			LOGGER.info("Order Controller: Order for user {} with items [{}] was successfully submitted", username, user.getCart().printItems());
 			return ResponseEntity.ok(order);
 		} catch (Exception e) {
-			LOGGER.error("There was an unexpected error while submitting an order for user {}", username, e);
+			LOGGER.error("Order Controller: There was an unexpected error while submitting an order for user {}", username, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -51,14 +51,14 @@ public class OrderController {
 		try {
 			User user = userRepository.findByUsername(username);
 			if(user == null) {
-				LOGGER.warn("No user with username {} could be found", username);
+				LOGGER.warn("Order Controller: No user with username {} could be found", username);
 				return ResponseEntity.notFound().build();
 			}
 
-			LOGGER.info("Order history for user {} was successfully fetched", username);
+			LOGGER.info("Order Controller: Order history for user {} was successfully fetched", username);
 			return ResponseEntity.ok(orderRepository.findByUser(user));
 		} catch (Exception e) {
-			LOGGER.error("There was an unexpected error while fetching orders for user {}", username, e);
+			LOGGER.error("Order Controller: There was an unexpected error while fetching orders for user {}", username, e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}

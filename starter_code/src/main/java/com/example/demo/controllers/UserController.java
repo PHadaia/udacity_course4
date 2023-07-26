@@ -46,8 +46,13 @@ public class UserController {
 			User user = new User();
 			user.setUsername(createUserRequest.getUsername());
 
-			if (!createUserRequest.getPassword().equals(createUserRequest.getConfirmPassword()) || createUserRequest.getPassword().length() < 8) {
-				LOGGER.error("User could not be created due to mismatched password {}", createUserRequest);
+			if (!createUserRequest.getPassword().equals(createUserRequest.getConfirmPassword())) {
+				LOGGER.error("User Controller: User could not be created due to mismatched password");
+				return ResponseEntity.badRequest().build();
+			}
+
+			if (createUserRequest.getPassword().length() < 8) {
+				LOGGER.error("User Controller: Provided password is shorter than 8 characters");
 				return ResponseEntity.badRequest().build();
 			}
 
@@ -58,7 +63,7 @@ public class UserController {
 			user.setCart(cart);
 			userRepository.save(user);
 
-			LOGGER.info("User {} was successfully created", user.getUsername());
+			LOGGER.info("User Controller: User {} was successfully created", user.getUsername());
 			return ResponseEntity.ok(user);
 		} catch (Exception e) {
 			LOGGER.error("There was an unexpected error while creating user {}", createUserRequest.getUsername(), e);

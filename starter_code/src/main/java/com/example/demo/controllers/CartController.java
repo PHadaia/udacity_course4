@@ -44,12 +44,12 @@ public class CartController {
 		try {
 			User user = userRepository.findByUsername(request.getUsername());
 			if (user == null) {
-				LOGGER.warn("No user with username {} could be found", request.getUsername());
+				LOGGER.warn("Cart Controller: No user with username {} could be found", request.getUsername());
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 			}
 			Optional<Item> item = itemRepository.findById(request.getItemId());
 			if (!item.isPresent()) {
-				LOGGER.warn("No item with id {} could be found", request.getItemId());
+				LOGGER.warn("Cart Controller: No item with id {} could be found", request.getItemId());
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 			}
 			Cart cart = user.getCart();
@@ -57,10 +57,10 @@ public class CartController {
 					.forEach(i -> cart.addItem(item.get()));
 			cartRepository.save(cart);
 
-			LOGGER.info("Item with id {} was added to {}'s cart {} times", request.getItemId(), request.getUsername(), request.getQuantity());
+			LOGGER.info("Cart Controller: Item with id {} was added to user {}'s cart {} times", request.getItemId(), request.getUsername(), request.getQuantity());
 			return ResponseEntity.ok(cart);
 		} catch (Exception e) {
-			LOGGER.error("There was an unexpected error while adding item with id {} to user {}s cart", request.getItemId(), request.getUsername(), e);
+			LOGGER.error("Cart Controller: There was an unexpected error while adding item with id {} to user {}s cart", request.getItemId(), request.getUsername(), e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
@@ -70,12 +70,12 @@ public class CartController {
 		try {
 			User user = userRepository.findByUsername(request.getUsername());
 			if (user == null) {
-				LOGGER.warn("No user with username {} could be found", request.getUsername());
+				LOGGER.warn("Cart Controller: No user with username {} could be found", request.getUsername());
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 			}
 			Optional<Item> item = itemRepository.findById(request.getItemId());
 			if (!item.isPresent()) {
-				LOGGER.warn("No item with id {} could be found", request.getItemId());
+				LOGGER.warn("Cart Controller: No item with id {} could be found", request.getItemId());
 				return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 			}
 			Cart cart = user.getCart();
@@ -83,10 +83,10 @@ public class CartController {
 					.forEach(i -> cart.removeItem(item.get()));
 			cartRepository.save(cart);
 
-			LOGGER.info("Item with id {} was removed from {}'s cart {} times", request.getItemId(), request.getUsername(), request.getQuantity());
+			LOGGER.info("Cart Controller: Item with id {} was removed from user {}'s cart {} times", request.getItemId(), request.getUsername(), request.getQuantity());
 			return ResponseEntity.ok(cart);
 		} catch (Exception e) {
-			LOGGER.error("There was an unexpected error while removing item with id {} from user {}s cart", request.getItemId(), request.getUsername(), e);
+			LOGGER.error("Cart Controller: There was an unexpected error while removing item with id {} from user {}s cart", request.getItemId(), request.getUsername(), e);
 			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
 		}
 	}
