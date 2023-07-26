@@ -1,10 +1,7 @@
 package com.example.demo.model.persistence;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -93,5 +90,11 @@ public class Cart {
 			total = new BigDecimal(0);
 		}
 		total = total.subtract(item.getPrice());
+	}
+
+	public String printItems() {
+		StringJoiner stringJoiner = new StringJoiner(",");
+		items.forEach(item -> stringJoiner.add(item.getName()));
+		return stringJoiner.toString();
 	}
 }
